@@ -404,7 +404,9 @@ export default class HttpServer {
       }
 
       // Payload processing
-      const encoding = detectEncoding(request)
+      const encoding =
+        detectEncoding(request, this._options.base64EncodedContentTypes) ||
+        undefined
 
       request.payload = request.payload && request.payload.toString(encoding)
       request.rawPayload = request.payload
@@ -550,6 +552,7 @@ export default class HttpServer {
           this.#serverless.service.provider.stage,
           requestPath,
           stageVariables,
+          encoding && encoding === 'base64',
         )
 
         event = lambdaProxyIntegrationEvent.create()

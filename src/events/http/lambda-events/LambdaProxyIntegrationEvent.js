@@ -22,12 +22,17 @@ export default class LambdaProxyIntegrationEvent {
   #request = null
   #stage = null
   #stageVariables = null
+  #isBase64Encoded = null
 
-  constructor(request, stage, path, stageVariables) {
+  constructor(request, stage, path, stageVariables, isBase64Encoded = false) {
     this.#path = path
     this.#request = request
     this.#stage = stage
     this.#stageVariables = stageVariables
+
+    // Do a boolean conversion to ensure isBase64Encoded is always a boolean,
+    // just like in true Lambda Proxy events
+    this.#isBase64Encoded = isBase64Encoded === true
   }
 
   create() {
@@ -200,6 +205,7 @@ export default class LambdaProxyIntegrationEvent {
       },
       resource,
       stageVariables: this.#stageVariables,
+      isBase64Encoded: this.#isBase64Encoded,
     }
   }
 }
